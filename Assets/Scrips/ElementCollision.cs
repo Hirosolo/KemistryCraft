@@ -17,33 +17,45 @@ public class ElementCollision : MonoBehaviour
 
     void Update()
     {
-        if (isOverlapping && otherElement != null)
+        // Only check for combinations if we're in the workspace
+        if (transform.parent.name == "WorkspacePanel")
         {
-            // Check if elements are close enough to combine
-            float distance = Vector2.Distance(rectTransform.anchoredPosition, otherElement.rectTransform.anchoredPosition);
+            CheckForOverlap();
+        }
+    }
 
-            // You can adjust this threshold based on your element size
-            if (distance < 100f)
+    void CheckForOverlap()
+    {
+        // Find all other ElementCollision components in the workspace
+        ElementCollision[] elements = transform.parent.GetComponentsInChildren<ElementCollision>();
+
+        foreach (ElementCollision other in elements)
+        {
+            // Skip checking against itself
+            if (other == this)
+                continue;
+
+            // Check if they're overlapping
+            if (IsOverlapping(other.GetComponent<RectTransform>()))
             {
-                TryCombineElements(otherElement);
+                Debug.Log($"Overlap detected between {elementName} and {other.elementName}"); // Debug log
+                TryCombineElements(other);
+                break;
             }
         }
     }
 
-    void OnRectTransformOverlap(RectTransform other)
-    {
-        ElementCollision otherElementScript = other.GetComponent<ElementCollision>();
-        if (otherElementScript != null && otherElementScript != this)
-        {
-            isOverlapping = true;
-            otherElement = otherElementScript;
-        }
-    }
     void TryCombineElements(ElementCollision other)
     {
+        // Avoid multiple combinations in the same frame
+        if (this == null || other == null)
+            return;
+
         string result;
         if (RecipeManager.Instance.TryCombine(elementName, other.elementName, out result))
         {
+            Debug.Log($"Recipe found! Combining {elementName} and {other.elementName} to create {result}"); // Debug log
+
             // Calculate middle position between the two elements
             Vector2 middlePosition = (rectTransform.anchoredPosition + other.rectTransform.anchoredPosition) / 2;
 
@@ -54,10 +66,6 @@ public class ElementCollision : MonoBehaviour
             Destroy(other.gameObject);
             Destroy(gameObject);
         }
-
-        // Reset overlap state
-        isOverlapping = false;
-        otherElement = null;
     }
 
     // Helper method to check if two RectTransforms are overlapping
@@ -79,5 +87,4 @@ public class ElementCollision : MonoBehaviour
 
         return new Rect(min, max - min);
     }
-
 }

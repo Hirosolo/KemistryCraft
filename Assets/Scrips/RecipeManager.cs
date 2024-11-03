@@ -24,7 +24,6 @@ public class RecipeManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -36,23 +35,32 @@ public class RecipeManager : MonoBehaviour
     {
         result = null;
 
+        Debug.Log($"Checking recipe for {element1} + {element2}"); // Debug log
+
         foreach (Recipe recipe in recipes)
         {
             if ((recipe.element1 == element1 && recipe.element2 == element2) ||
                 (recipe.element1 == element2 && recipe.element2 == element1))
             {
                 result = recipe.result;
+                Debug.Log($"Recipe found! Result: {result}"); // Debug log
                 return true;
             }
         }
 
+        Debug.Log("No matching recipe found"); // Debug log
         return false;
     }
 
     public GameObject CreateNewElement(string elementName, Vector2 position)
     {
+        Debug.Log($"Creating new element: {elementName} at position: {position}"); // Debug log
+
+        // Find the workspace panel
+        Transform workspacePanel = GameObject.Find("WorkspacePanel").transform;
+
         // Instantiate the element at the given position
-        GameObject newElement = Instantiate(elementPrefab, GameObject.Find("WorkspacePanel").transform);
+        GameObject newElement = Instantiate(elementPrefab, workspacePanel);
 
         // Set up the RectTransform
         RectTransform rectTransform = newElement.GetComponent<RectTransform>();
@@ -61,9 +69,6 @@ public class RecipeManager : MonoBehaviour
         // Set the element name
         ElementCollision elementCollision = newElement.GetComponent<ElementCollision>();
         elementCollision.elementName = elementName;
-
-        // You might want to set different sprites/colors for different elements
-        // This can be expanded later
 
         return newElement;
     }
