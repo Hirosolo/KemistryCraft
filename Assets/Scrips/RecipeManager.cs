@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Recipe
@@ -17,25 +18,60 @@ public class RecipeManager : MonoBehaviour
     public List<Recipe> recipes = new List<Recipe>();
 
     [Header("Element Prefabs")]
-    public GameObject elementPrefab;  // Reference to your base ElementPrefab
+    public GameObject elementPrefab;
+
+    [Header("Basic Elements")]
+    public List<string> basicElements = new List<string>();
+
+    [Header("UI References")]
+    public Transform inventoryContent;
+    public Transform workspacePanel;
+
+    public HashSet<string> unlockedElements = new HashSet<string>();
 
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            InitializeInventory();
         }
         else
         {
             Destroy(gameObject);
         }
+
+        LoadUnlockedElements();
+    }
+
+    private void InitializeInventory()
+    {
+        // Add basic elements to inventory
+        foreach (string elementName in basicElements)
+        {
+            AddElementToInventory(elementName);
+            unlockedElements.Add(elementName);
+        }
+    }
+
+    public void AddElementToInventory(string elementName)
+    {
+        // Create new element in inventory
+        GameObject newElement = Instantiate(elementPrefab, inventoryContent);
+
+        // Set up the element
+        ElementCollision elementCollision = newElement.GetComponent<ElementCollision>();
+        elementCollision.elementName = elementName;
+
+        // Set proper RectTransform values for inventory item
+        RectTransform rectTransform = newElement.GetComponent<RectTransform>();
+        rectTransform.localScale = Vector3.one;
+        rectTransform.localPosition = Vector3.zero;
     }
 
     public bool TryCombine(string element1, string element2, out string result)
     {
         result = null;
-
-        Debug.Log($"Checking recipe for {element1} + {element2}"); // Debug log
 
         foreach (Recipe recipe in recipes)
         {
@@ -43,33 +79,48 @@ public class RecipeManager : MonoBehaviour
                 (recipe.element1 == element2 && recipe.element2 == element1))
             {
                 result = recipe.result;
-                Debug.Log($"Recipe found! Result: {result}"); // Debug log
+                DiscoveredRecipesManager.Instance.AddDiscoveredRecipe(element1, element2, result);
                 return true;
             }
         }
 
-        Debug.Log("No matching recipe found"); // Debug log
         return false;
     }
 
-    public GameObject CreateNewElement(string elementName, Vector2 position)
+    private void SaveUnlockedElements()
     {
-        Debug.Log($"Creating new element: {elementName} at position: {position}"); // Debug log
+        string elementsJson = JsonUtility.ToJson(new SerializableElementList(unlockedElements));
+        PlayerPrefs.SetString("UnlockedElements", elementsJson);
+        PlayerPrefs.Save();
+    }
 
-        // Find the workspace panel
-        Transform workspacePanel = GameObject.Find("WorkspacePanel").transform;
+    private void LoadUnlockedElements()
+    {
+        if (PlayerPrefs.HasKey("UnlockedElements"))
+        {
+            string elementsJson = PlayerPrefs.GetString("UnlockedElements");
+            SerializableElementList loadedElements = JsonUtility.FromJson<SerializableElementList>(elementsJson);
+            unlockedElements = new HashSet<string>(loadedElements.elements);
 
-        // Instantiate the element at the given position
-        GameObject newElement = Instantiate(elementPrefab, workspacePanel);
+            // Recreate inventory elements
+            foreach (string elementName in unlockedElements)
+            {
+                if (!basicElements.Contains(elementName))
+                {
+                    AddElementToInventory(elementName);
+                }
+            }
+        }
+    }
+}
 
-        // Set up the RectTransform
-        RectTransform rectTransform = newElement.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = position;
+[System.Serializable]
+public class SerializableElementList
+{
+    public List<string> elements;
 
-        // Set the element name
-        ElementCollision elementCollision = newElement.GetComponent<ElementCollision>();
-        elementCollision.elementName = elementName;
-
-        return newElement;
+    public SerializableElementList(HashSet<string> elementSet)
+    {
+        elements = new List<string>(elementSet);
     }
 }

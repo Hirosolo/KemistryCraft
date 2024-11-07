@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,6 +10,7 @@ public class DraggableElement : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     private Vector2 originalPosition;
     private Image image;
     private bool isDraggingClone = false;
+    private bool isFromWorkspace = false;
 
     void Awake()
     {
@@ -21,6 +21,9 @@ public class DraggableElement : MonoBehaviour, IBeginDragHandler, IDragHandler, 
 
         if (canvasGroup == null)
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
+
+        // Set isFromWorkspace based on initial parent
+        isFromWorkspace = transform.parent.name == "WorkspacePanel";
     }
 
     void Start()
@@ -33,7 +36,7 @@ public class DraggableElement : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         canvasGroup.alpha = 0.6f;
         canvasGroup.blocksRaycasts = false;
 
-        // Only create copy if this is not already a clone
+        // Check if this is an element in the Content (inventory) that needs to be cloned
         if (transform.parent.name == "Content" && !isDraggingClone)
         {
             // Find the workspace panel
@@ -64,6 +67,7 @@ public class DraggableElement : MonoBehaviour, IBeginDragHandler, IDragHandler, 
             // Setup the clone
             DraggableElement copyDrag = copy.GetComponent<DraggableElement>();
             copyDrag.isDraggingClone = true;
+            copyDrag.isFromWorkspace = true;  // Mark as workspace element
 
             // Ensure the copy has the same size as the original
             copyRect.sizeDelta = rectTransform.sizeDelta;
@@ -87,17 +91,37 @@ public class DraggableElement : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
 
-        // Handle drops for cloned elements
-        if (isDraggingClone)
+        // Only process if this is an element from the workspace
+        if (isFromWorkspace)
         {
-            // If not dropped on workspace, destroy the clone
-            if (transform.parent.name != "WorkspacePanel")
+            // Get the mouse position
+            Vector2 mousePosition = eventData.position;
+
+            // Find the inventory scroll view
+            GameObject scrollView = GameObject.Find("Scroll View");
+            if (scrollView != null)
             {
-                Destroy(gameObject);
+                RectTransform scrollViewRect = scrollView.GetComponent<RectTransform>();
+                Vector2 localPoint;
+                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    scrollViewRect,
+                    mousePosition,
+                    eventData.pressEventCamera,
+                    out localPoint))
+                {
+                    // Check if the point is inside the scroll view rect
+                    if (scrollViewRect.rect.Contains(localPoint))
+                    {
+                        // Destroy the element if it's dropped on the inventory
+                        Destroy(gameObject);
+                        return;
+                    }
+                }
             }
-            else
+
+            // If not destroyed, clamp position within workspace
+            if (transform.parent.name == "WorkspacePanel")
             {
-                // Ensure the element stays within the workspace bounds
                 RectTransform workspaceRect = transform.parent.GetComponent<RectTransform>();
                 Vector2 localPos = rectTransform.anchoredPosition;
 

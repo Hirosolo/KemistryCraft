@@ -1,24 +1,39 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ElementCollision : MonoBehaviour
 {
     private RectTransform rectTransform;
-    private bool isOverlapping = false;
-    private ElementCollision otherElement;
+    private RecipeManager recipeManager;
 
     [Header("Element Properties")]
-    public string elementName;  // Name of this element (like "Water", "Fire", etc.)
+    public string elementName;
+
+    [Header("UI References")]
+    public TextMeshProUGUI elementLabel;
+
+    private bool isBeingDestroyed = false;
 
     void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
+        recipeManager = RecipeManager.Instance;
+
+        if (elementLabel == null)
+        {
+            CreateElementLabel();
+        }
+    }
+
+    void Start()
+    {
+        UpdateElementLabel();
     }
 
     void Update()
     {
-        // Only check for combinations if we're in the workspace
-        if (transform.parent.name == "WorkspacePanel")
+        if (transform.parent != null && transform.parent.name == "WorkspacePanel" && !isBeingDestroyed)
         {
             CheckForOverlap();
         }
@@ -26,19 +41,15 @@ public class ElementCollision : MonoBehaviour
 
     void CheckForOverlap()
     {
-        // Find all other ElementCollision components in the workspace
         ElementCollision[] elements = transform.parent.GetComponentsInChildren<ElementCollision>();
 
         foreach (ElementCollision other in elements)
         {
-            // Skip checking against itself
-            if (other == this)
+            if (other == this || other.isBeingDestroyed)
                 continue;
 
-            // Check if they're overlapping
             if (IsOverlapping(other.GetComponent<RectTransform>()))
             {
-                Debug.Log($"Overlap detected between {elementName} and {other.elementName}"); // Debug log
                 TryCombineElements(other);
                 break;
             }
@@ -47,20 +58,17 @@ public class ElementCollision : MonoBehaviour
 
     void TryCombineElements(ElementCollision other)
     {
-        // Avoid multiple combinations in the same frame
-        if (this == null || other == null)
-            return;
-
         string result;
-        if (RecipeManager.Instance.TryCombine(elementName, other.elementName, out result))
+        if (recipeManager.TryCombine(elementName, other.elementName, out result))
         {
-            Debug.Log($"Recipe found! Combining {elementName} and {other.elementName} to create {result}"); // Debug log
-
-            // Calculate middle position between the two elements
             Vector2 middlePosition = (rectTransform.anchoredPosition + other.rectTransform.anchoredPosition) / 2;
 
+            // Mark elements for destruction to prevent further combinations
+            isBeingDestroyed = true;
+            other.isBeingDestroyed = true;
+
             // Create the new combined element
-            RecipeManager.Instance.CreateNewElement(result, middlePosition);
+            CreateNewElement(result, middlePosition);
 
             // Destroy the original elements
             Destroy(other.gameObject);
@@ -68,7 +76,50 @@ public class ElementCollision : MonoBehaviour
         }
     }
 
-    // Helper method to check if two RectTransforms are overlapping
+    private void CreateElementLabel()
+    {
+        GameObject labelObject = new GameObject("ElementLabel", typeof(RectTransform), typeof(TextMeshProUGUI));
+        labelObject.transform.SetParent(transform, false);
+
+        RectTransform labelRect = labelObject.GetComponent<RectTransform>();
+        // Set the anchor to stretch in both directions
+        labelRect.anchorMin = Vector2.zero;
+        labelRect.anchorMax = Vector2.one;
+        // Reset position and size
+        labelRect.offsetMin = Vector2.zero;
+        labelRect.offsetMax = Vector2.zero;
+
+        elementLabel = labelObject.GetComponent<TextMeshProUGUI>();
+        elementLabel.alignment = TextAlignmentOptions.Center;
+        elementLabel.verticalAlignment = VerticalAlignmentOptions.Middle;
+        elementLabel.fontStyle = FontStyles.Bold;
+        elementLabel.fontSize = 18;
+        elementLabel.color = Color.black;
+        elementLabel.enableWordWrapping = false;
+        elementLabel.overflowMode = TextOverflowModes.Overflow;
+    }
+
+    private void CreateNewElement(string elementName, Vector2 position)
+    {
+        GameObject newElement = Instantiate(recipeManager.elementPrefab, recipeManager.workspacePanel);
+
+        // Set up the element
+        ElementCollision elementCollision = newElement.GetComponent<ElementCollision>();
+        elementCollision.elementName = elementName;
+
+        // Set position in workspace
+        RectTransform newElementRect = newElement.GetComponent<RectTransform>();
+        newElementRect.anchoredPosition = position;
+
+        // If this is a new discovery, add to inventory and notify DiscoveredRecipesManager
+        if (!recipeManager.unlockedElements.Contains(elementName))
+        {
+            recipeManager.AddElementToInventory(elementName);
+            DiscoveredRecipesManager.Instance.AddDiscoveredRecipe(elementName, elementName, elementName);
+            Debug.Log($"New element discovered: {elementName}");
+        }
+    }
+
     public bool IsOverlapping(RectTransform other)
     {
         Rect rect1 = GetWorldSpaceRect(rectTransform);
@@ -86,5 +137,10 @@ public class ElementCollision : MonoBehaviour
         Vector2 max = corners[2];
 
         return new Rect(min, max - min);
+    }
+
+    private void UpdateElementLabel()
+    {
+        elementLabel.text = elementName;
     }
 }
