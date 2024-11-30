@@ -228,21 +228,299 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recipes:
-  - element1: 
-    element2: 
-    result: 
+  - element1: C
+    element2: O2
+    result: CO2
   - element1: H2
     element2: O2
     result: H2O
   - element1: Na
     element2: Cl2
     result: NaCl
+  - element1: P
+    element2: O2
+    result: P2O5
+  - element1: H2
+    element2: Cl2
+    result: HCl
+  - element1: C
+    element2: H2
+    result: CH4
+  - element1: C
+    element2: H2
+    result: CH4
+  - element1: H2SO4
+    element2: NaCl
+    result: NaHSO4
+  - element1: Ca
+    element2: O2
+    result: CaO
+  - element1: Ca
+    element2: Cl2
+    result: CaCl2
+  - element1: Na
+    element2: O2
+    result: Na2O
+  - element1: Na2O
+    element2: H2O
+    result: NaOH
+  - element1: Na2O
+    element2: CO2
+    result: Na2CO3
+  - element1: CaCl2
+    element2: Na2CO3
+    result: CaCO3
+  - element1: N2
+    element2: H2
+    result: NH3
+  - element1: NH3
+    element2: O2
+    result: N2O3
+  - element1: N2O3
+    element2: H2O
+    result: HNO3
+  - element1: Fe
+    element2: S
+    result: Fe2S3
+  - element1: S
+    element2: O2
+    result: SO2
+  - element1: SO2
+    element2: O2
+    result: SO3
+  - element1: Na2O
+    element2: SO3
+    result: Na2SO4
+  - element1: SO3
+    element2: H2O
+    result: H2SO4
+  - element1: H2SO4
+    element2: Na2O
+    result: Na2SO4
+  - element1: CaO
+    element2: CO2
+    result: CaCO3
+  - element1: Na2CO3
+    element2: H2O
+    result: NaOH
+  - element1: NH3
+    element2: HNO3
+    result: NH4NO3
+  - element1: CaO
+    element2: SO3
+    result: CaSO4
+  - element1: Al
+    element2: O2
+    result: Al2O3
+  - element1: Al2O3
+    element2: SO3
+    result: Al2(SO4)3
+  - element1: N2
+    element2: O2
+    result: NO
+  - element1: NO
+    element2: O2
+    result: NO2
+  - element1: NO2
+    element2: O2
+    result: NO3
+  - element1: Cu
+    element2: SO3
+    result: SO4
+  - element1: Zn
+    element2: S
+    result: ZnS
+  - element1: NO3
+    element2: H2O
+    result: HNO3
+  - element1: Ca
+    element2: S
+    result: CaS
+  - element1: Cu
+    element2: S
+    result: CuS
+  - element1: Mg
+    element2: O2
+    result: MgO
+  - element1: K
+    element2: Cl2
+    result: KCl
+  - element1: CaO
+    element2: P2O5
+    result: Ca3(PO4)2
+  - element1: Fe
+    element2: Cl2
+    result: FeCl2
+  - element1: Mg
+    element2: N2
+    result: Mg2N2
+  - element1: Zn
+    element2: O2
+    result: ZnO
+  - element1: P2O5
+    element2: H2O
+    result: H3PO4
+  - element1: Al2O3
+    element2: H3PO4
+    result: AlPO4
+  - element1: MgO
+    element2: H2O
+    result: Mg(OH)2
+  - element1: Al
+    element2: S
+    result: Al2S3
+  - element1: K
+    element2: O2
+    result: K2O
+  - element1: Ca
+    element2: N2
+    result: Ca3N2
+  - element1: Cu
+    element2: H2SO4
+    result: CuSO4
+  - element1: Mg
+    element2: H2SO4
+    result: MgSO4
+  - element1: KOH
+    element2: HNO3
+    result: KNO3
+  - element1: Mg
+    element2: HNO3
+    result: Mg(NO3)2
+  - element1: CaO
+    element2: H2O
+    result: Ca(OH)2
+  - element1: NaOH
+    element2: H3PO4
+    result: Na3PO4
+  - element1: KOH
+    element2: H2SO4
+    result: K2SO4
+  - element1: Cu
+    element2: HNO3
+    result: Cu(NO3)2
+  - element1: NaOH
+    element2: Cl2
+    result: NaClO
+  - element1: Na
+    element2: P
+    result: Na3P
+  - element1: MgO
+    element2: H3PO4
+    result: Mg3(PO4)2
+  - element1: Zn
+    element2: H2SO4
+    result: ZnSO4
+  - element1: NH3
+    element2: H2O
+    result: NH4OH
+  - element1: NH3
+    element2: HCl
+    result: NH4Cl
+  - element1: HCl
+    element2: NaOH
+    result: NaCl
+  - element1: CO
+    element2: H2
+    result: CH3OH
+  - element1: CH3OH
+    element2: O2
+    result: CH2O
+  - element1: CH3OH
+    element2: CO2
+    result: CH3COOH
+  - element1: CH3OH
+    element2: Cl2
+    result: CH3Cl
+  - element1: CH3OH
+    element2: NH3
+    result: CH3NH2
+  - element1: CH3OH
+    element2: CO
+    result: HCOOH
+  - element1: CO
+    element2: H2O
+    result: HCOOH
+  - element1: CO2
+    element2: H2
+    result: HCOOH
+  - element1: HCOOH
+    element2: NaOH
+    result: HCOONa
+  - element1: HCOOH
+    element2: CH3OH
+    result: HCOOCH3
+  - element1: HCOOH
+    element2: H2
+    result: CH3OH
+  - element1: CH3COOH
+    element2: H2
+    result: C2H5OH
+  - element1: C2H5OH
+    element2: H3PO4
+    result: C2H4
+  - element1: C2H4
+    element2: H2
+    result: C2H6
+  - element1: C2H4
+    element2: HCl
+    result: C2H5Cl
+  - element1: C2H4
+    element2: H2O
+    result: C2H5OH
+  - element1: C2H4
+    element2: O2
+    result: CH3CHO
+  - element1: C2H4
+    element2: KMnO4
+    result: C2H4(OH)2
+  - element1: C2H6
+    element2: H2SO4
+    result: C2H4
+  - element1: CH4
+    element2: O2
+    result: C2H2
+  - element1: CH4
+    element2: N2
+    result: HCN
+  - element1: CH4
+    element2: Cl2
+    result: CH3Cl
+  - element1: C2H2
+    element2: H2
+    result: C2H4
+  - element1: C2H2
+    element2: CO
+    result: C3H4O2
+  - element1: C2H2
+    element2: O2
+    result: CH3COCH3
+  - element1: C2H5OH
+    element2: O2
+    result: CH3CHO
+  - element1: CH3CHO
+    element2: H2
+    result: C2H4(OH)2
+  - element1: C2H5OH
+    element2: Cl2
+    result: C2H5Cl
   elementPrefab: {fileID: 8119338087137858040, guid: 9aab0addda8fc9b40bf12b296ccf21ca, type: 3}
   basicElements:
+  - Na
+  - Ca
+  - Zn
+  - Fe
+  - Al
+  - Cu
+  - Mg
+  - K
   - H2
   - O2
-  - Na
   - Cl2
+  - N2
+  - P
+  - C
+  - S
   inventoryContent: {fileID: 1303335382}
   workspacePanel: {fileID: 59576502}
 --- !u!4 &176386812
