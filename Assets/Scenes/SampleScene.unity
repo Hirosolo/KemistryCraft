@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 59576502}
   - component: {fileID: 59576504}
   - component: {fileID: 59576503}
+  - component: {fileID: 59576505}
   m_Layer: 5
   m_Name: WorkspacePanel
   m_TagString: Workspace
@@ -166,7 +167,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 59576501}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -197,6 +198,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 59576501}
   m_CullTransparentMesh: 1
+--- !u!328 &59576505
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 59576501}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 32900000, guid: 4c3108f56004b1c41be16d00ab4ec1e8, type: 3}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 519420031}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: <noninit>
+  m_RenderMode: 0
+  m_AspectRatio: 2
+  m_DataSource: 0
+  m_TimeUpdateMode: 2
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 2
+  m_TargetAudioSources:
+  - {fileID: 0}
+  m_DirectAudioVolumes:
+  - 1
+  m_Url: 
+  m_EnabledAudioTracks: 01
+  m_DirectAudioMutes: 00
+  m_ControlledAudioTrackCount: 1
+  m_PlayOnAwake: 1
+  m_SkipOnDrop: 1
+  m_Looping: 1
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
 --- !u!1 &176386810
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,7 +541,7 @@ MonoBehaviour:
   - element1: C2H5OH
     element2: Cl2
     result: C2H5Cl
-  elementPrefab: {fileID: 8119338087137858040, guid: 9aab0addda8fc9b40bf12b296ccf21ca, type: 3}
+  elementPrefab: {fileID: 7908063917246670553, guid: 95d967d6252189d439ef6c7963ebacd1, type: 3}
   basicElements:
   - Na
   - Ca
@@ -551,7 +588,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recipeListPanel: {fileID: 1723226400}
-  recipeEntryPrefab: {fileID: 6189641774870255599, guid: e3a2654d158240d418a5690531873529, type: 3}
+  recipeEntryPrefab: {fileID: 7908063917246670553, guid: 95d967d6252189d439ef6c7963ebacd1, type: 3}
   recipeListContent: {fileID: 0}
 --- !u!1 &519420028
 GameObject:

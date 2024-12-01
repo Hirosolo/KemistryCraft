@@ -33,7 +33,7 @@ public class DiscoveredRecipesManager : MonoBehaviour
         if (!discoveredRecipes.Contains(recipeKey))
         {
             discoveredRecipes.Add(recipeKey);
-            CreateRecipeEntry(element1, element2, result);
+            //CreateRecipeEntry(element1, element2, result);
             SaveDiscoveredRecipes();
         }
     }

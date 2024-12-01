@@ -42,10 +42,18 @@ public class ScreenFader : MonoBehaviour
             fadeColor.a = newAlpha;
             fadeImage.color = fadeColor;
             yield return null;
+            if (canvasGroup != null)
+            {
+                canvasGroup.alpha = newAlpha;
+            }
         }
 
         // Ensure the final alpha is set
         fadeColor.a = endAlpha;
         fadeImage.color = fadeColor;
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = endAlpha;
+        }
     }
 }
