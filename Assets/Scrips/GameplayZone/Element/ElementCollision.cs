@@ -6,14 +6,13 @@ public class ElementCollision : MonoBehaviour
 {
     private RectTransform rectTransform;
     private RecipeManager recipeManager;
+    private bool isBeingDestroyed = false;
 
     [Header("Element Properties")]
     public string elementName;
 
     [Header("UI References")]
     public TextMeshProUGUI elementLabel;
-
-    private bool isBeingDestroyed = false;
 
     void Awake()
     {

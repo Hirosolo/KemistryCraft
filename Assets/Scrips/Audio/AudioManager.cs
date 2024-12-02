@@ -11,19 +11,16 @@ public class AudioManager : MonoBehaviour
     public AudioClip background;
     public AudioClip talking;
     [Header("----------Fade Settings----------")]
-    [SerializeField] float fadeDuration = 1.0f; // Duration of the fade effect
-
+    [SerializeField] float fadeDuration = 1.0f;
 
     private void Start()
     {
         StartCoroutine(FadeIn(musicSource, background));
     }
-
     public void PlaySFX(AudioClip clip)
     {
         StartCoroutine(FadeIn(SFXSource, clip));
     }
-
     public void StopSFX()
     {
         StartCoroutine(FadeOut(SFXSource));
@@ -44,8 +41,6 @@ public class AudioManager : MonoBehaviour
         }
         audioSource.volume = 1f; // Ensure volume is set to max at the end
     }
-
-    // Fade out audio
     private IEnumerator FadeOut(AudioSource audioSource)
     {
         float timeElapsed = 0f;

@@ -20,8 +20,6 @@ public class DialogueManager : MonoBehaviour
         buttonCanvasGroup.interactable = false;
         buttonCanvasGroup.blocksRaycasts = false;
     }
-
-    // Start is called before the first frame update
     void Start()
     {
         sentences = new Queue<string>();
@@ -40,7 +38,6 @@ public class DialogueManager : MonoBehaviour
 
         DisplayNextSentence();
     }
-
     public void DisplayNextSentence()
     {
         if (sentences.Count == 0)
@@ -53,7 +50,6 @@ public class DialogueManager : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(TypeSentence(sentence));
     }
-
     IEnumerator TypeSentence(string sentence)
     {
         int dialogueSpeed = 5;
@@ -69,7 +65,6 @@ public class DialogueManager : MonoBehaviour
         audioManager.StopSFX();
 
     }
-
     public void EndDialogue()
     {
         //animator.SetBool("IsOpen", false);

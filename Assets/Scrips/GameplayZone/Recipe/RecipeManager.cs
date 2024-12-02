@@ -43,7 +43,6 @@ public class RecipeManager : MonoBehaviour
         }
     }
 
-
     public void AddRecipe(string element1, string element2, string result)
     {
         recipes.Add(new Recipe(element1, element2, result));

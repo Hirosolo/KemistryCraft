@@ -6,13 +6,11 @@ using TMPro;
 public class DiscoveredRecipesManager : MonoBehaviour
 {
     public static DiscoveredRecipesManager Instance { get; private set; }
-
+    private HashSet<string> discoveredRecipes = new HashSet<string>();
     [Header("UI References")]
     public GameObject recipeListPanel;
     public GameObject recipeEntryPrefab;
     public Transform recipeListContent;
-
-    private HashSet<string> discoveredRecipes = new HashSet<string>();
 
     void Awake()
     {
@@ -25,7 +23,6 @@ public class DiscoveredRecipesManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     public void AddDiscoveredRecipe(string element1, string element2, string result)
     {
         string recipeKey = GetRecipeKey(element1, element2);
@@ -37,7 +34,6 @@ public class DiscoveredRecipesManager : MonoBehaviour
             SaveDiscoveredRecipes();
         }
     }
-
     private string GetRecipeKey(string element1, string element2)
     {
         // Create a consistent key regardless of element order
@@ -45,14 +41,12 @@ public class DiscoveredRecipesManager : MonoBehaviour
         System.Array.Sort(elements);
         return string.Join("+", elements);
     }
-
     private void CreateRecipeEntry(string element1, string element2, string result)
     {
         GameObject entry = Instantiate(recipeEntryPrefab, recipeListContent);
         TextMeshProUGUI recipeText = entry.GetComponentInChildren<TextMeshProUGUI>();
         recipeText.text = $"{element1} + {element2} = {result}";
     }
-
     private void SaveDiscoveredRecipes()
     {
         // Use the generic SerializableList class for saving
@@ -97,8 +91,6 @@ public class DiscoveredRecipesManager : MonoBehaviour
             Debug.LogWarning("No recipe file found at: " + path);
         }
     }
-
-
     private void RecreateRecipeEntries()
     {
         foreach (string recipeKey in discoveredRecipes)
